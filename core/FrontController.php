@@ -51,7 +51,7 @@ class FrontController {
      */
     private function notFound() {
         if (file_exists(APP . 'Controller/error.php')) {
-            header('location: ' . BASE_URL . 'error');
+            header('Location: ' . BASE_URL . 'error');
         } else {
             die('Sorry, the requested content could not be found');
         }
