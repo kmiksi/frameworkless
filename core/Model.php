@@ -2,9 +2,9 @@
 
 class Model {
 
-    private static $db = null;
+    static $db = null;
 
-    public function __construct() {
+    private static function setDataSourse() {
         try {
             $datasoursename = DBConfig::TYPE . ':host=' . DBConfig::HOST . ';dbname=' . DBConfig::NAME;
             $options = array(
@@ -12,14 +12,17 @@ class Model {
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
             );
 
-            self::db = new PDO($datasoursename, DBConfig::USER, DBConfig::PASS, $options);
+            static::$db = new PDO($datasoursename, DBConfig::USER, DBConfig::PASS, $options);
         } catch (PDOException $e) {
             exit('Database connection could not be established.');
         }
     }
 
     public function db() {
-        return self::$db;
+        if (empty(static::$db)) {
+            static::setDataSourse();
+        }
+        return static::$db;
     }
 
     public function query($sql, $named_params = array()) {
