@@ -28,6 +28,9 @@ class Controller {
     public function render($view, $layout = 'default') {
         if ($this->render) { // prevent rendering the same action twice
             $this->view('layout/' . $layout . '_start');
+            if (!file_exists(APP . 'View/' . $view . '.php')) {
+                $view = get_class($this) . '/' . $view;
+            }
             $this->view($view);
             $this->view('layout/' . $layout . '_end');
 
@@ -42,6 +45,27 @@ class Controller {
     public function view($path) {
         extract($this->viewVars);
         require APP . 'View/' . $path . '.php';
+    }
+
+    public function requestMethodIs($type) {
+        $request_method = filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING);
+        return strtoupper($request_method) === strtoupper($type);
+    }
+
+    public function formData(array $fields, $type = 'post') {
+        switch (strtoupper($type)) {
+            case 'POST':
+                $type = INPUT_POST;
+                break;
+            case 'GET':
+                $type = INPUT_GET;
+                break;
+        }
+        $form_data = array();
+        foreach ($fields as $field) {
+            $form_data[":$field"] = filter_input($type, $field, FILTER_SANITIZE_STRING);
+        }
+        return $form_data;
     }
 
 }
