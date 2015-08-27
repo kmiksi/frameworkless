@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * DBO configuration
+ */
 class DBConfig {
 
     const TYPE = 'pgsql';
@@ -10,6 +13,9 @@ class DBConfig {
 
 }
 
+/**
+ * App defaults
+ */
 class AppConfig {
 
     const DEFAULT_CONTROLLER = 'Home';
