@@ -4,6 +4,7 @@ class Model {
 
     /** @var PDO PDO connection */
     static $db = null;
+    public $errors = array();
 
     /**
      * Set a PDO connection to be reused
@@ -39,7 +40,15 @@ class Model {
      */
     public function query($sql, $named_params = array()) {
         $query = $this->db()->prepare($sql);
-        $query->execute($named_params);
+        if (!$query) {
+            $this->errors[] = $this->db()->errorInfo();
+            return FALSE;
+        }
+        $success = $query->execute($named_params);
+        if (!$success) {
+            $this->errors[] = $query->errorInfo();
+            return FALSE;
+        }
 
         return $query->fetchAll();
     }
