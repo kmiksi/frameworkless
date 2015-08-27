@@ -6,8 +6,11 @@ class Controller {
     public $model = null;
     public $render = true;
 
-    public function render($view = null, $layout = null) {
-        if ($this->render) {
+    public function render($view, $layout = 'default') {
+        if ($this->render) { // prevent rendering the same action twice
+            $this->view('layout/' . $layout . '_start.php');
+            $this->view($view);
+            $this->view('layout/' . $layout . '_end.php');
 
             $this->render = false; // already rendered
         }
