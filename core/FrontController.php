@@ -12,7 +12,7 @@ class FrontController {
         $params = explode('/', trim($url, '/'));
 
         // store first and seccond params, removing them from params list
-        $controller_name = array_shift($params);
+        $controller_name = ucfirst(array_shift($params)); // uppercase classname
         $action_name = array_shift($params);
 
         require_once APP . 'config.php';
@@ -35,7 +35,7 @@ class FrontController {
             // verify if action is valid
             if (method_exists($controller, $action_name)) {
                 call_user_func_array(array($controller, $action_name), $params);
-                $controller->render($action_name); // skipped if already rendered
+                $controller->render("$controller_name/$action_name"); // skipped if already rendered
             } else {
                 // action not found
                 $this->notFound();
